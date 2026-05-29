@@ -1,19 +1,33 @@
+from .http import SchwabHttpClient
 from .market_data import MarketDataService
-from .token_service import TokenService
+from .oauth import OAuthManager
+from .token_store import JsonTokenStore
 
 
 class SchwabClient:
 
     def __init__(
         self,
-        credentials_path=None,
-        token_path=None,
+        app_key,
+        app_secret,
+        redirect_uri,
+        token_file,
     ):
-        self.token_service = TokenService(
-            credentials_path=credentials_path,
-            token_path=token_path,
+        self.token_store = JsonTokenStore(
+            token_file
+        )
+
+        self.oauth = OAuthManager(
+            app_key=app_key,
+            app_secret=app_secret,
+            redirect_uri=redirect_uri,
+            token_store=self.token_store,
+        )
+
+        self.http = SchwabHttpClient(
+            token_provider=self.oauth
         )
 
         self.market_data = MarketDataService(
-            self
+            http_client=self.http
         )
