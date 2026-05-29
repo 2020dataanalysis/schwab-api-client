@@ -1,3 +1,4 @@
+from .market_data import MarketDataService
 from .token_service import TokenService
 
 
@@ -13,19 +14,6 @@ class SchwabClient:
             token_path=token_path,
         )
 
-    def get_quote(
-        self,
-        symbol,
-    ):
-        raise NotImplementedError
-
-    def get_price_history(
-        self,
-        symbol,
-    ):
-        raise NotImplementedError
-
-    def get_market_hours(
-        self,
-    ):
-        raise NotImplementedError
+        self.market_data = MarketDataService(
+            self
+        )
