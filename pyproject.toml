@@ -1,0 +1,12 @@
+[project]
+name = "schwab-api-client"
+version = "0.1.0"
+description = "Production-ready Python client library for the Charles Schwab Trader API."
+requires-python = ">=3.12"
+dependencies = [
+    "requests",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["schwab_client*"]

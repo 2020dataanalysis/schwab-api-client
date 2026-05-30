@@ -1,0 +1,20 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# Env / secrets
+.env
+private/credentials.json
+private/refresh_token.json
+private/authorization_code_token.json
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# Runtime output
+output/
