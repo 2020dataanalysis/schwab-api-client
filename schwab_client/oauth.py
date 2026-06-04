@@ -134,9 +134,26 @@ class OAuthManager:
 
         return int(time.time()) < expiration_time
 
+    def interactive_authorization_code_flow(self):
+        print("Refresh token failed. Starting authorization-code flow.")
+        print("Please visit the following URL and authorize the application:")
+        print(self.build_authorization_url())
+
+        callback_url = input(
+            "Paste the FULL callback URL from your browser's address bar "
+            "(the one that starts with https://127.0.0.1/):\n> "
+        ).strip()
+
+        return self.authorization_code_flow(
+            callback_url
+        )
+
     def get_access_token(self):
         if not self.is_access_token_valid():
-            self.refresh_token_flow()
+            try:
+                self.refresh_token_flow()
+            except SchwabAuthError:
+                self.interactive_authorization_code_flow()
 
         token_data = self.token_store.load()
 
