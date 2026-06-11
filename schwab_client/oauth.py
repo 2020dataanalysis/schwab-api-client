@@ -152,7 +152,8 @@ class OAuthManager:
         if not self.is_access_token_valid():
             try:
                 self.refresh_token_flow()
-            except SchwabAuthError:
+            except SchwabAuthError as e:
+                print(f"REFRESH TOKEN FAILED DETAILS: {e}")
                 self.interactive_authorization_code_flow()
 
         token_data = self.token_store.load()
