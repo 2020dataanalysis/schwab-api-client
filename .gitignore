@@ -18,3 +18,5 @@ private/authorization_code_token.json
 
 # Runtime output
 output/
+
+SPY_10_day_1m.csv
