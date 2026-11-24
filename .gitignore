@@ -20,3 +20,7 @@ private/authorization_code_token.json
 output/
 
 SPY_10_day_1m.csv
+
+# Build and runtime artifacts
+build/
+private/*.lock
