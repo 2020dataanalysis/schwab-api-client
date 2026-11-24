@@ -12,6 +12,7 @@ class SchwabClient:
         app_secret,
         redirect_uri,
         token_file,
+        interactive_auth=False,
     ):
         self.token_store = JsonTokenStore(
             token_file
@@ -22,6 +23,7 @@ class SchwabClient:
             app_secret=app_secret,
             redirect_uri=redirect_uri,
             token_store=self.token_store,
+            interactive_auth=interactive_auth,
         )
 
         self.http = SchwabHttpClient(

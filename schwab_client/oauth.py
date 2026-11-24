@@ -1,4 +1,5 @@
 import base64
+import sys
 import time
 from urllib.parse import unquote
 
@@ -25,6 +26,7 @@ class OAuthManager:
         token_url=TOKEN_URL,
         authorization_url=AUTHORIZATION_URL,
         timeout_seconds=DEFAULT_TIMEOUT_SECONDS,
+        interactive_auth=False,
     ):
         self.app_key = app_key
         self.app_secret = app_secret
@@ -33,6 +35,7 @@ class OAuthManager:
         self.token_url = token_url
         self.authorization_url = authorization_url
         self.timeout_seconds = timeout_seconds
+        self.interactive_auth = interactive_auth
 
     def build_authorization_url(self):
         return (
@@ -184,11 +187,24 @@ class OAuthManager:
         )
 
     def get_access_token(self):
-        if not self.is_access_token_valid():
-            with self.token_store.lock():
-                # Another process may have refreshed while we waited.
-                if not self.is_access_token_valid():
-                    self._refresh_token_unlocked()
+        try:
+            if not self.is_access_token_valid():
+                with self.token_store.lock():
+                    # Another process may have refreshed while we waited.
+                    if not self.is_access_token_valid():
+                        self._refresh_token_unlocked()
+
+        except (
+            SchwabAuthTemporaryError,
+            SchwabAuthConfigurationError,
+        ):
+            raise
+
+        except SchwabAuthError:
+            if not self.interactive_auth or not sys.stdin.isatty():
+                raise
+
+            self.interactive_authorization_code_flow()
 
         token_data = self.token_store.load()
 
