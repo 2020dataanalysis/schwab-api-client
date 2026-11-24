@@ -3,6 +3,8 @@ import os
 import tempfile
 from pathlib import Path
 
+from .token_lock import token_lock
+
 
 class JsonTokenStore:
 
@@ -11,6 +13,9 @@ class JsonTokenStore:
         token_file,
     ):
         self.token_file = Path(token_file)
+
+    def lock(self):
+        return token_lock(self.token_file)
 
     def exists(self):
         return self.token_file.exists()
